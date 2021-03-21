@@ -1,9 +1,11 @@
 package sk.kosickaakademia.hingis.rat_house.database;
 
 import sk.kosickaakademia.hingis.rat_house.entity.Rat;
+import sk.kosickaakademia.hingis.rat_house.enumerator.Gender;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class SQL {
@@ -19,23 +21,28 @@ public class SQL {
 
             String insertRatQuery = "insert into rat (name, age, gender, color) values (?,?,?,?)";
 
-            PreparedStatement preparedStatement = connection.prepareStatement(insertRatQuery);
+            PreparedStatement preparedStatement
+                                = connection
+                                .prepareStatement(insertRatQuery);
 
 
-            if(rat.getAge() > 0 || rat.getAge() <= 10
-                                || rat.getGender() < 0
-                                || rat.getGender() > 1
-                                || rat.getName().isEmpty())
-                                return false;
+                    if(rat.getAge() < (byte) 0
+                    || rat.getAge() > (byte) 10
+                    || rat.getGender().getGender() < 0
+                    || rat.getGender().getGender() > 1
+                    || rat.getName().isEmpty())
+                    return false;
+
 
             preparedStatement
                     .setString(1, rat.getName());
 
             preparedStatement
-                    .setByte(2, rat.getAge());
+                    .setInt(2, rat.getAge());
 
             preparedStatement
-                    .setByte(3, rat.getGender());
+                    .setInt(3, rat.getGender()
+                                                .getGender());
 
             preparedStatement
                     .setString(4, rat.getColor());
@@ -48,6 +55,49 @@ public class SQL {
         }
 
         return false;
+    }
+
+    public Rat getRatById(int id) {
+
+        if(id >= 0) {
+
+            try(Connection connection = DatabaseConnection.connect()) {
+
+                String getRatByIdQuery = "select * from rat where id = ?";
+
+                PreparedStatement preparedStatement
+                        = connection
+                        .prepareStatement(getRatByIdQuery);
+
+                preparedStatement.setInt(1, id);
+
+                ResultSet result = preparedStatement.executeQuery();
+
+                if(result.next()) {
+
+                    String name = result.getString("name");
+                    byte age = result.getByte("age");
+                    byte gender = result.getByte("gender");
+                    String color = result.getString("color");
+
+                    Rat rat = new Rat(name, age, color, gender);
+
+                    System.out.println(rat.stringify());
+
+
+                    return new Rat(name, age, color, gender);
+
+                } else {
+
+                    return null;
+                }
+
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+
+        return null;
     }
 
 }
