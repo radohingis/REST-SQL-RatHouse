@@ -5,10 +5,10 @@ import sk.kosickaakademia.hingis.rat_house.enumerator.Gender;
 public class Rat {
 
     private int id;
-    private String name;
-    private byte age;
-    private String color;
-    private Gender gender;
+    private final String name;
+    private final byte age;
+    private final String color;
+    private final Gender gender;
     private static final String HEX_COLOR_PATTERN = "^([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$";
 
     public Rat(String name, byte age, String color, byte gender) {
@@ -19,7 +19,7 @@ public class Rat {
 
         this.color = !color
                      .matches(HEX_COLOR_PATTERN)
-                     ? "FFFFFF"
+                     ? "#FFFFFF"
                      : "#" + color;
 
         this.gender = gender == 0 ? Gender.male : Gender.female;
