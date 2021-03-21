@@ -100,4 +100,34 @@ public class SQL {
         return null;
     }
 
+    public boolean updateRatsAge(int id, byte age) {
+
+                if(id < 0
+                || age < 0
+                || age > 9)
+                return false;
+
+                    try(Connection connection = DatabaseConnection.connect()) {
+
+                        String updateRatsAgeQuery = "update rat set age = ? where id = ?";
+
+                        PreparedStatement preparedStatement
+                                            = connection
+                                            .prepareStatement(updateRatsAgeQuery);
+
+                        preparedStatement.setByte(1, age);
+                        preparedStatement.setInt(2, id);
+
+                        int querieAffected = preparedStatement.executeUpdate();
+
+                        if(querieAffected == 1) return true;
+                        else return false;
+
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+
+                return false;
+    }
+
 }
