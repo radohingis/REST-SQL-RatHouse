@@ -74,17 +74,14 @@ public class SQL {
 
                 ResultSet result = preparedStatement.executeQuery();
 
+                connection.close();
+
                 if(result.next()) {
 
                     String name = result.getString("name");
                     byte age = result.getByte("age");
                     byte gender = result.getByte("gender");
                     String color = result.getString("color");
-
-                    Rat rat = new Rat(name, age, color, gender);
-
-                    System.out.println(rat.stringify());
-
 
                     return new Rat(name, age, color, gender);
 
@@ -101,35 +98,35 @@ public class SQL {
         return null;
     }
 
-    public boolean updateRatsAge(int id, byte age) {
-
-                if(id < 0
-                || age < 0
-                || age > 9)
-                return false;
-
-                    try(Connection connection = DatabaseConnection.connect()) {
-
-                        String updateRatsAgeQuery = "update rat set age = ? where id = ?";
-
-                        PreparedStatement preparedStatement
-                                            = connection
-                                            .prepareStatement(updateRatsAgeQuery);
-
-                        preparedStatement.setByte(1, age);
-                        preparedStatement.setInt(2, id);
-
-                        int querieAffected = preparedStatement.executeUpdate();
-
-                        if(querieAffected == 1) return true;
-                                                else return false;
-
-                    } catch (SQLException throwables) {
-                        throwables.printStackTrace();
-                    }
-
-                return false;
-    }
+//    public boolean feedRat(int id) {
+//
+//                if(id < 0)
+//                return false;
+//
+//                Rat temp = getRatById(id);
+//
+//                    try(Connection connection = DatabaseConnection.connect()) {
+//
+//                        String updateRatsAgeQuery = "update rat set age = ? where id = ?";
+//
+//                        PreparedStatement preparedStatement
+//                                            = connection
+//                                            .prepareStatement(updateRatsAgeQuery);
+//
+//                        preparedStatement.setByte(1, (byte)  1);
+//                        preparedStatement.setInt(2, id);
+//
+//                        int querieAffected = preparedStatement.executeUpdate();
+//
+//                        if(querieAffected == 1) return true;
+//                                                else return false;
+//
+//                    } catch (SQLException throwables) {
+//                        throwables.printStackTrace();
+//                    }
+//
+//                return false;
+//    }
 
     public boolean killThatRat(int id) {
 

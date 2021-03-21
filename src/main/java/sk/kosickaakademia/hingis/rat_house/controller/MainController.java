@@ -34,7 +34,7 @@ public class MainController {
                 return ResponseEntity.ok().body("200 YAY WE CATCHED A RAT, LETS PET IT");
     }
 
-    @GetMapping("/rat")
+    @GetMapping("/pet")
     public ResponseEntity petRat(@RequestParam(value = "id") int id) {
 
         if(id < 0) return ResponseEntity.badRequest().body("400 WHOPS, BAD REQUEST");
@@ -42,6 +42,17 @@ public class MainController {
         Rat temp = new SQL().getRatById(id);
         String body = new Gson().toJson(temp);
         return ResponseEntity.ok(body);
+
+    }
+
+    @DeleteMapping("/kill")
+    public ResponseEntity killThatRat(@RequestParam(value = "id") int id) {
+
+        if(id < 0) return ResponseEntity.badRequest().body("400 WHOPS, BAD REQUEST");
+
+        new SQL().killThatRat(id);
+
+        return ResponseEntity.ok("RAT KILLED, LET'S CATCH NEW ONE");
 
     }
 
