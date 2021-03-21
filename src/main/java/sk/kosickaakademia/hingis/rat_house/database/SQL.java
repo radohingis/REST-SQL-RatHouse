@@ -1,7 +1,6 @@
 package sk.kosickaakademia.hingis.rat_house.database;
 
 import sk.kosickaakademia.hingis.rat_house.entity.Rat;
-import sk.kosickaakademia.hingis.rat_house.enumerator.Gender;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,6 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class SQL {
+
+    private static final String KILL_THAT_RAT = "delete from rat where id = ?";
 
     public boolean insertRat(Rat rat) {
 
@@ -121,13 +122,38 @@ public class SQL {
                         int querieAffected = preparedStatement.executeUpdate();
 
                         if(querieAffected == 1) return true;
-                        else return false;
+                                                else return false;
 
                     } catch (SQLException throwables) {
                         throwables.printStackTrace();
                     }
 
                 return false;
+    }
+
+    public boolean killThatRat(int id) {
+
+        if(id < 0) return false;
+
+        try(Connection connection = DatabaseConnection.connect()) {
+
+            PreparedStatement preparedStatement
+                    = connection
+                    .prepareStatement(KILL_THAT_RAT);
+
+            preparedStatement.setInt(1, id);
+
+            int result = preparedStatement
+                        .executeUpdate();
+
+            if(result == 1) return true;
+                            else return false;
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return false;
     }
 
 }
