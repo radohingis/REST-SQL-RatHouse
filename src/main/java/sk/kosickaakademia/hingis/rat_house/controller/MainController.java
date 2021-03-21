@@ -3,9 +3,7 @@ package sk.kosickaakademia.hingis.rat_house.controller;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sk.kosickaakademia.hingis.rat_house.database.SQL;
 import sk.kosickaakademia.hingis.rat_house.entity.Rat;
 
@@ -34,6 +32,17 @@ public class MainController {
                 new SQL().insertRat(temp);
 
                 return ResponseEntity.ok().body("200 YAY WE CATCHED A RAT, LETS PET IT");
+    }
+
+    @GetMapping("/rat")
+    public ResponseEntity petRat(@RequestParam(value = "id") int id) {
+
+        if(id < 0) return ResponseEntity.badRequest().body("400 WHOPS, BAD REQUEST");
+
+        Rat temp = new SQL().getRatById(id);
+        String body = new Gson().toJson(temp);
+        return ResponseEntity.ok(body);
+
     }
 
 }
