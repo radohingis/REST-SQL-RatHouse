@@ -56,4 +56,15 @@ public class MainController {
 
     }
 
+    @PutMapping("/feed")
+    public ResponseEntity feedRat(@RequestParam(value="id") int id) {
+
+        if(id < 0) return ResponseEntity.badRequest().body("400 WHOPS, BAD REQUEST");
+
+        boolean ratFed = new SQL().feedRat(id);
+
+        if (ratFed) return ResponseEntity.ok("Rat fed");
+        else return ResponseEntity.ok("Whoops your rat is probably dead");
+    }
+
 }
