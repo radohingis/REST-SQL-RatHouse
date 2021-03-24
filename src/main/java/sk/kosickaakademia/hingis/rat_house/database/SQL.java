@@ -98,35 +98,47 @@ public class SQL {
         return null;
     }
 
-//    public boolean feedRat(int id) {
-//
-//                if(id < 0)
-//                return false;
-//
-//                Rat temp = getRatById(id);
-//
-//                    try(Connection connection = DatabaseConnection.connect()) {
-//
-//                        String updateRatsAgeQuery = "update rat set age = ? where id = ?";
-//
-//                        PreparedStatement preparedStatement
-//                                            = connection
-//                                            .prepareStatement(updateRatsAgeQuery);
-//
-//                        preparedStatement.setByte(1, (byte)  1);
-//                        preparedStatement.setInt(2, id);
-//
-//                        int querieAffected = preparedStatement.executeUpdate();
-//
-//                        if(querieAffected == 1) return true;
-//                                                else return false;
-//
-//                    } catch (SQLException throwables) {
-//                        throwables.printStackTrace();
-//                    }
-//
-//                return false;
-//    }
+    public boolean feedRat(int id) {
+
+                if(id < 0)
+                return false;
+
+                    try (Connection connection = DatabaseConnection.connect()){
+
+                        String getRatsAgeQuery = "select * from rat where id = ?";
+                        String updateRatsAgeQuery = "update rat set age = ? where id = ?";
+
+                        PreparedStatement findRat
+                                            = connection
+                                            .prepareStatement(getRatsAgeQuery);
+
+                        findRat.setInt(1, id);
+
+                        PreparedStatement feedRat
+                                            = connection
+                                            .prepareStatement(updateRatsAgeQuery);
+
+                        ResultSet foundRat = findRat.executeQuery();
+                        if(foundRat.next()) {
+                            byte age = foundRat.getByte("age");
+                            feedRat.setByte(1, (byte) (age + 1));
+                            feedRat.setInt(2, id);
+
+                            int querieAffected = feedRat.executeUpdate();
+
+                            if(querieAffected == 1) {
+                                connection.close();
+                                return true;
+                            }
+                            else return false;
+                        }
+
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+
+                return false;
+    }
 
     public boolean killThatRat(int id) {
 
